@@ -1,0 +1,68 @@
+services:
+  openldap:
+    build: ./ldap  # <-- UBAH INI
+    container_name: openldap
+    environment:
+      - LDAP_ORGANISATION=MyCompany
+      - LDAP_DOMAIN=mycompany.com
+      - LDAP_ADMIN_PASSWORD=adminpassword
+    # HAPUS SELURUH BAGIAN 'volumes'
+    ports:
+      - "389:389"
+      - "636:636"
+    networks:
+      - app-net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HOSTNAME=localhost  # <-- TAMBAHKAN BARIS PENTING INI
+    command: start-dev
+    ports:
+      - "8080:8080"
+    volumes: # <-- TAMBAHKAN BARIS INI
+      - keycloak-data:/opt/keycloak/data # <-- DAN BARIS INI
+    depends_on:
+      - openldap
+    networks:
+      - app-net
+
+# (service backend dan frontend tetap sama)
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "5001:5001"
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=myrealm
+      - KEYCLOAK_CLIENT_ID=my-backend-client
+    networks:
+      - app-net
+    depends_on:
+      - keycloak
+
+  # docker-compose.yml (VERSI BARU YANG SUDAH DIPERBAIKI)
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes: # <-- TAMBAHKAN BARIS INI
+      - ./frontend:/app # <-- DAN BARIS INI
+      - /app/node_modules # <-- TAMBAHKAN BARIS KRUSIAL INI
+    depends_on:
+      - backend
+    networks:
+      - app-net
+
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:          # <-- TAMBAHKAN BLOK INI DI PALING BAWAH
+  keycloak-data:  # <-- DAN BARIS INI

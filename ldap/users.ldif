@@ -1,0 +1,12 @@
+# ldap/users.ldif
+dn: ou=users,dc=mycompany,dc=com
+objectClass: organizationalUnit
+ou: users
+
+dn: cn=john.doe,ou=users,dc=mycompany,dc=com
+objectClass: inetOrgPerson
+cn: john.doe
+sn: Doe
+givenName: John
+mail: john.doe@mycompany.com
+userPassword: password123
