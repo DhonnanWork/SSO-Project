@@ -1,5 +1,3 @@
-Tentu saja. Anda benar, format sebelumnya adalah bagian dari percakapan. Ini adalah versi README.md yang bersih, terformat dengan baik, dan siap untuk Anda salin langsung ke dalam proyek Anda.
-
 Proyek Demo LDAP & OAuth 2.0 dengan Keycloak & Docker
 
 Proyek ini mendemonstrasikan alur otentikasi dan otorisasi lengkap menggunakan OpenLDAP sebagai user store dan Keycloak sebagai Identity Provider (OAuth 2.0/OIDC). Aplikasi terdiri dari frontend React dan backend Node.js (Express), yang semuanya diorkestrasi menggunakan Docker Compose.
